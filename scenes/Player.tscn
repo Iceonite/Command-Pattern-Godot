@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bc5x3lhmsl8l"]
+
+[ext_resource type="Script" uid="uid://cs2oiiek77r4u" path="res://scripts/CommandPattern/CommandUnits.cs" id="1_v6fml"]
+[ext_resource type="Texture2D" uid="uid://b6skoptkttcee" path="res://icon.svg" id="2_3li8b"]
+[ext_resource type="Script" uid="uid://bedf82xmqwnah" path="res://scripts/CommandSpin.cs" id="2_mdl7e"]
+
+[node name="Player" type="Node2D" unique_id=1618741694]
+script = ExtResource("1_v6fml")
+
+[node name="Node" type="Node" parent="." unique_id=1359456436]
+script = ExtResource("2_mdl7e")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=2042723416]
+position = Vector2(583, 292)
+texture = ExtResource("2_3li8b")

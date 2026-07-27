@@ -1,21 +1,24 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
+
 
 public partial class Command : Node
 {
     [Signal]
     public delegate void CommandCompletedEventHandler();
 
-    String CommandName = "Command";    
+    public String CommandName = "Command";    
+    public CommandUnits Unit;
 
     // What the command does upon execution
-    private bool execute()
+    public virtual async Task<bool> execute()
     {
         return true;
     }
 
     // How to undo this command
-    private bool undo()
+    public virtual async Task<bool> undo()
     {
         return true;
     }
