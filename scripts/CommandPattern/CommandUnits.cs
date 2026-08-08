@@ -17,12 +17,19 @@ public partial class CommandUnits : Node2D
 	{
 		if (@event.IsActionPressed("Spin"))
 		{
-			GD.Print("EHY");
+			GD.Print("Queue Spin");
 			Command command = new CommandSpin();
 			AddCommand(command);
 		}
+
+		if (@event.IsActionPressed("Unspin"))
+		{
+			GD.Print("Undo Last Command")
+			UndoLastCommand();
+		}
 	}
 
+	// Adds command to the commandQueue, and executes it
 	private void AddCommand(Command command)
 	{
 		_commandQueue.Add(command);
@@ -32,8 +39,10 @@ public partial class CommandUnits : Node2D
 		return;
 	}
 
+	// Recursive function to execute all commands in the list
 	private async void ExecuteNextCommand()
 	{
+		// If you want to use this, this is set up
 		EmitSignal(SignalName.CommandsChange);
 
 		if (_awaitingExecution == true || _commandQueue.Count == 0)
@@ -41,25 +50,39 @@ public partial class CommandUnits : Node2D
 			return;
 		}
 
+		// Execute command
 		_awaitingExecution = true;
-
 		Command command = _commandQueue[0];
-
 		await command.execute();
 
+		// Clean up list and status
 		_undoList.Insert(0, _commandQueue[0]);
 		_commandQueue.RemoveAt(0);
-
 		_awaitingExecution = false;
 
+		// Recursively call so all commands are executed
+		ExecuteNextCommand();
+		return;
+	}
+
+	// Undo the last command, not recursive
+	private async void UndoLastCommand()
+	{
+		if (_awaitingExecution == true || _undoList.Count == 0)
+		{
+			return;
+		}
+
+		// Queue it up and execute
+		_awaitingExecution = true;
+		Command command = _undoList[0];
+		await command.undo();
+
+		// Clean up and execute any commands not yet executed
+		_undoList.RemoveAt(0);
+		_awaitingExecution = false;
 		ExecuteNextCommand();
 
 		return;
 	}
-
-	private void UndoLastCommand()
-	{
-		return;
-	}
-
 }
